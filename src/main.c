@@ -23,6 +23,7 @@ int main() {
 	int *keys[10];
 	char *data[10];
 	char data_count = 'a';
+
 	for (int i = 0; i < 10; i++) {
 		keys[i] = malloc(sizeof(**keys));
 		data[i] = malloc(sizeof(**data));
