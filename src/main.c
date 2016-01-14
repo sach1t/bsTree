@@ -3,8 +3,6 @@
 #include <assert.h>
 #include <stdio.h>
 
-
-
 int compare(void *x, void *y) {
 	int x1 = *((int *)x);
 	int y1 = *((int *)y);
