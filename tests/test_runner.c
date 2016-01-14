@@ -20,4 +20,5 @@ TEST_GROUP_RUNNER(Basic)
 	RUN_TEST_CASE(Basic, DeletionOneChild); 
 	RUN_TEST_CASE(Basic, DeleteTwoChildrenDirectRightSuccessor); 
 	RUN_TEST_CASE(Basic, DeleteTwoChildrenNonDirectRightSuccessor); 
+	RUN_TEST_CASE(Basic, DeletionDuplicateKey);
 }

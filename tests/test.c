@@ -244,3 +244,21 @@ TEST(Basic, DeleteTwoChildrenNonDirectRightSuccessor)
     TEST_ASSERT(bst->root->left->key == &key2);
     TEST_ASSERT(bst->root->right->key == &key3);
 }
+
+TEST(Basic, DeletionDuplicateKey)
+{
+    int key = 1;
+    int data = 1;
+    bstInsert(bst, &key, &data);
+
+    int key2 = 1;
+    int data2 = 2;
+    bstInsert(bst, &key2, &data2);
+
+    int deleteKey = 1;
+    bstDelete(bst, &deleteKey);
+
+    TEST_ASSERT(bst->root->data == &data2);
+    TEST_ASSERT(bst->root->right == NULL);
+    TEST_ASSERT(bst->root->left == NULL);
+}
