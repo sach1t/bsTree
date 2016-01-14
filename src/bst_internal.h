@@ -2,8 +2,9 @@
 #define BST_INTERNAL_H
 
 /* NOTE: 
- * THIS HEADER IS ONLY FOR TESTING PURPOSES 
- * (see tests directory) */
+ * THIS HEADER IS ONLY FOR TESTING PURPOSES AND IMPLEMENTATION
+ * It was created so that testing could be more robust 
+ * i.e. have access to the nodes in the tree. */
 
 struct bsTreeNode {
 	struct bsTreeNode *left;

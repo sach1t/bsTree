@@ -1,7 +1,7 @@
-#include "bst.h"
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
+#include "bst.h"
 
 int compare(void *x, void *y) {
 	int x1 = *((int *)x);

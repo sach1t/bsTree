@@ -1,6 +1,6 @@
-#include "bst.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "bst.h"
 #include "bst_internal.h"
 
 /* Default comparison for keys in the tree. */
