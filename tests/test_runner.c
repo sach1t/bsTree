@@ -12,6 +12,7 @@ TEST_GROUP_RUNNER(Basic)
 	RUN_TEST_CASE(Basic, InsertionRight); 
 	RUN_TEST_CASE(Basic, InsertionLeft); 
 	RUN_TEST_CASE(Basic, InsertionNonRootParent); 
+	RUN_TEST_CASE(Basic, InsertionDuplicateKey); 
 
 	RUN_TEST_CASE(Basic, DeletionNonExistent); 
 	RUN_TEST_CASE(Basic, DeletionRoot); 

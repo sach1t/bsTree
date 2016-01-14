@@ -130,6 +130,21 @@ TEST(Basic, InsertionNonRootParent)
     TEST_ASSERT(bst->root->right->left->key == &key4);
 }
 
+TEST(Basic, InsertionDuplicateKey)
+{
+    int key = 1;
+    int data = 1;
+    bstInsert(bst, &key, &data);
+
+    int key2 = 1;
+    int data2 = 2;
+    bstInsert(bst, &key2, &data2);
+    
+    TEST_ASSERT(bst->root->data == &data);
+    TEST_ASSERT(bst->root->right->data == &data2);
+    TEST_ASSERT(bst->root->left == NULL);
+}
+
 TEST(Basic, DeletionNonExistent)
 {
     int key = 0;
