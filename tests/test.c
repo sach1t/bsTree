@@ -17,215 +17,215 @@ int compare(void *x, void *y) {
         return 1;
 }
 
-bst bsTree;
+bsTree bst;
 
 TEST_SETUP(Basic)
 {
-	bsTree = bstCreate();
-	bstSetCompare(bsTree, compare);
+	bst = bstCreate();
+	bstSetCompare(bst, compare);
 }
 
 TEST_TEAR_DOWN(Basic)
 {
-	bstDestroy(bsTree);	
+	bstDestroy(bst);	
 }
 
 TEST(Basic, SearchEmptyTree)
 {
     int key = 0;
-    TEST_ASSERT(NULL == bstSearch(bsTree, &key));
+    TEST_ASSERT(NULL == bstSearch(bst, &key));
 }
 
 TEST(Basic, SearchRootMatch)
 {
     int key = 0;
-    int val = 1;
-    bstInsert(bsTree, &key, &val);
-    TEST_ASSERT(&val == bstSearch(bsTree, &key));
+    int data = 1;
+    bstInsert(bst, &key, &data);
+    TEST_ASSERT(&data == bstSearch(bst, &key));
 }
 
 TEST(Basic, SearchNoMatch)
 {
     int key = 0;
-    int val = 1;
-    bstInsert(bsTree, &key, &val);
+    int data = 1;
+    bstInsert(bst, &key, &data);
 
     int key2 = 5;
-    TEST_ASSERT(NULL == bstSearch(bsTree, &key2));
+    TEST_ASSERT(NULL == bstSearch(bst, &key2));
 }
 
 TEST(Basic, SearchSmallTreeMatch)
 {
     int key = 1;
-    int val = 0;
-    bstInsert(bsTree, &key, &val);
+    int data = 0;
+    bstInsert(bst, &key, &data);
 
     int key2 = 0;
-    int val2 = 0;
-    bstInsert(bsTree, &key2, &val2);
+    int data2 = 0;
+    bstInsert(bst, &key2, &data2);
 
     int key3 = 5;
-    int val3 = 0;
-    bstInsert(bsTree, &key3, &val3);
+    int data3 = 0;
+    bstInsert(bst, &key3, &data3);
     
     int key4 = 2;
-    int val4 = 0;
-    bstInsert(bsTree, &key4, &val4);
+    int data4 = 0;
+    bstInsert(bst, &key4, &data4);
 
-    TEST_ASSERT(&val4 == bstSearch(bsTree, &key4));
+    TEST_ASSERT(&data4 == bstSearch(bst, &key4));
 }
 
 TEST(Basic, InsertReplaceRoot)
 {
 	int key = 0;
-	int val = 1;
-    bstInsert(bsTree, &key, &val);
-	TEST_ASSERT(&val == bstSearch(bsTree, &key));
+	int data = 1;
+    bstInsert(bst, &key, &data);
+	TEST_ASSERT(&data == bstSearch(bst, &key));
 }
 
 TEST(Basic, InsertionRight)
 {
     int key = 1;
-    int val = 1;
-    bstInsert(bsTree, &key, &val);
+    int data = 1;
+    bstInsert(bst, &key, &data);
 
     int key2 = 2;
-    int val2 = 2;
-    bstInsert(bsTree, &key2, &val2);
+    int data2 = 2;
+    bstInsert(bst, &key2, &data2);
     
-    TEST_ASSERT(bsTree->root->right->key == &key2);
+    TEST_ASSERT(bst->root->right->key == &key2);
 }
 
 TEST(Basic, InsertionLeft)
 {
     int key = 1;
-    int val = 1;
-    bstInsert(bsTree, &key, &val);
+    int data = 1;
+    bstInsert(bst, &key, &data);
 
     int key2 = 0;
-    int val2 = 2;
-    bstInsert(bsTree, &key2, &val2);
+    int data2 = 2;
+    bstInsert(bst, &key2, &data2);
     
-    TEST_ASSERT(bsTree->root->left->key == &key2);
+    TEST_ASSERT(bst->root->left->key == &key2);
 }
 
 TEST(Basic, InsertionNonRootParent)
 {
     int key = 1;
-    int val = 1;
-    bstInsert(bsTree, &key, &val);
+    int data = 1;
+    bstInsert(bst, &key, &data);
 
     int key2 = 0;
-    int val2 = 2;
-    bstInsert(bsTree, &key2, &val2);
+    int data2 = 2;
+    bstInsert(bst, &key2, &data2);
 
     int key3 = 5;
-    int val3 = 2;
-    bstInsert(bsTree, &key3, &val3);
+    int data3 = 2;
+    bstInsert(bst, &key3, &data3);
 
     int key4 = 4;
-    int val4 = 2;
-    bstInsert(bsTree, &key4, &val4);
+    int data4 = 2;
+    bstInsert(bst, &key4, &data4);
     
-    TEST_ASSERT(bsTree->root->right->left->key == &key4);
+    TEST_ASSERT(bst->root->right->left->key == &key4);
 }
 
 TEST(Basic, DeletionNonExistent)
 {
     int key = 0;
-    int val = 2;
-    bstInsert(bsTree, &key, &val);
+    int data = 2;
+    bstInsert(bst, &key, &data);
     
     int key2 = 1;
-    TEST_ASSERT(NULL == bstDelete(bsTree, &key2));
+    TEST_ASSERT(NULL == bstDelete(bst, &key2));
 }
 
 TEST(Basic, DeletionRoot)
 {
     int key = 0;
-    int val = 2;
-    bstInsert(bsTree, &key, &val);
+    int data = 2;
+    bstInsert(bst, &key, &data);
     
-    TEST_ASSERT(bsTree == bstDelete(bsTree, &key));
-    TEST_ASSERT(bsTree->root == NULL);
+    TEST_ASSERT(bst == bstDelete(bst, &key));
+    TEST_ASSERT(bst->root == NULL);
 }
 
 TEST(Basic, DeletionNoChildrenNonRoot)
 {
     int key = 1;
-    int val = 0;
-    bstInsert(bsTree, &key, &val);
+    int data = 0;
+    bstInsert(bst, &key, &data);
 
     int key2 = 0;
-    int val2 = 0;
-    bstInsert(bsTree, &key2, &val2);
+    int data2 = 0;
+    bstInsert(bst, &key2, &data2);
 
     int key3 = 2;
-    int val3 = 0;
-    bstInsert(bsTree, &key3, &val3);
+    int data3 = 0;
+    bstInsert(bst, &key3, &data3);
     
-    TEST_ASSERT(bsTree == bstDelete(bsTree, &key3));
-    TEST_ASSERT(bsTree->root->key == &key);
-    TEST_ASSERT(bsTree->root->left->key == &key2);
-    TEST_ASSERT(bsTree->root->right == NULL);
+    TEST_ASSERT(bst == bstDelete(bst, &key3));
+    TEST_ASSERT(bst->root->key == &key);
+    TEST_ASSERT(bst->root->left->key == &key2);
+    TEST_ASSERT(bst->root->right == NULL);
 }
 
 TEST(Basic, DeletionOneChild)
 {
     int key = 1;
-    int val = 0;
-    bstInsert(bsTree, &key, &val);
+    int data = 0;
+    bstInsert(bst, &key, &data);
 
     int key2 = 0;
-    int val2 = 0;
-    bstInsert(bsTree, &key2, &val2);
+    int data2 = 0;
+    bstInsert(bst, &key2, &data2);
     
-    TEST_ASSERT(bsTree == bstDelete(bsTree, &key));
-    TEST_ASSERT(bsTree->root->key == &key2);
-    TEST_ASSERT(bsTree->root->left == NULL);
-    TEST_ASSERT(bsTree->root->right == NULL);
+    TEST_ASSERT(bst == bstDelete(bst, &key));
+    TEST_ASSERT(bst->root->key == &key2);
+    TEST_ASSERT(bst->root->left == NULL);
+    TEST_ASSERT(bst->root->right == NULL);
 }
 
 TEST(Basic, DeleteTwoChildrenDirectRightSuccessor)
 {
     int key = 1;
-    int val = 0;
-    bstInsert(bsTree, &key, &val);
+    int data = 0;
+    bstInsert(bst, &key, &data);
 
     int key2 = 0;
-    int val2 = 0;
-    bstInsert(bsTree, &key2, &val2);
+    int data2 = 0;
+    bstInsert(bst, &key2, &data2);
 
     int key3 = 2;
-    int val3 = 0;
-    bstInsert(bsTree, &key3, &val3);
+    int data3 = 0;
+    bstInsert(bst, &key3, &data3);
     
-    TEST_ASSERT(bsTree == bstDelete(bsTree, &key));
-    TEST_ASSERT(bsTree->root->key == &key3);
-    TEST_ASSERT(bsTree->root->left->key == &key2);
-    TEST_ASSERT(bsTree->root->right == NULL);
+    TEST_ASSERT(bst == bstDelete(bst, &key));
+    TEST_ASSERT(bst->root->key == &key3);
+    TEST_ASSERT(bst->root->left->key == &key2);
+    TEST_ASSERT(bst->root->right == NULL);
 }
 
 TEST(Basic, DeleteTwoChildrenNonDirectRightSuccessor)
 {
     int key = 1;
-    int val = 0;
-    bstInsert(bsTree, &key, &val);
+    int data = 0;
+    bstInsert(bst, &key, &data);
 
     int key2 = 0;
-    int val2 = 0;
-    bstInsert(bsTree, &key2, &val2);
+    int data2 = 0;
+    bstInsert(bst, &key2, &data2);
 
     int key3 = 5;
-    int val3 = 0;
-    bstInsert(bsTree, &key3, &val3);
+    int data3 = 0;
+    bstInsert(bst, &key3, &data3);
     
     int key4 = 2;
-    int val4 = 0;
-    bstInsert(bsTree, &key4, &val4);
+    int data4 = 0;
+    bstInsert(bst, &key4, &data4);
 
-    TEST_ASSERT(bsTree == bstDelete(bsTree, &key));
-    TEST_ASSERT(bsTree->root->key == &key4);
-    TEST_ASSERT(bsTree->root->left->key == &key2);
-    TEST_ASSERT(bsTree->root->right->key == &key3);
+    TEST_ASSERT(bst == bstDelete(bst, &key));
+    TEST_ASSERT(bst->root->key == &key4);
+    TEST_ASSERT(bst->root->left->key == &key2);
+    TEST_ASSERT(bst->root->right->key == &key3);
 }

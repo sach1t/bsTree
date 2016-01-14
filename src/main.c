@@ -13,23 +13,23 @@ int compare(void *x, void *y) {
 }
 
 int main() {
-	bst bsTree = bstCreate();
-	bstSetCompare(bsTree, compare);
+	bsTree bst = bstCreate();
+	bstSetCompare(bst, compare);
 	int key = 5;
-	bstInsert(bsTree, &key, NULL);
+	bstInsert(bst, &key, NULL);
 	int key2 = 0;
-	bstInsert(bsTree, &key2, NULL);
+	bstInsert(bst, &key2, NULL);
 	int key3 = 10;
-	bstInsert(bsTree, &key3, NULL);
+	bstInsert(bst, &key3, NULL);
 	int key4 = 2;
-	bstInsert(bsTree, &key4, NULL);
-	bstPrintKeys(bsTree);
+	bstInsert(bst, &key4, NULL);
+	bstPrintKeys(bst);
 	
-	bstDelete(bsTree, &key3);
-	bstPrintKeys(bsTree);
-	bstDelete(bsTree, &key);
-	bstPrintKeys(bsTree);
-	bstDestroy(bsTree);
+	bstDelete(bst, &key3);
+	bstPrintKeys(bst);
+	bstDelete(bst, &key);
+	bstPrintKeys(bst);
+	bstDestroy(bst);
 
  return 0;
 }

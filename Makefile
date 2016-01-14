@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -Wno-unused-function
 INCLUDES = -Isrc/ -Ideps/Unity/src/ -Ideps/Unity/extras/fixture/src #-I (headers)
 LFLAGS =   # -L (lib path)
 LIBS =   # -l (lib name)

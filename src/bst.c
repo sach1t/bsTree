@@ -4,7 +4,7 @@
 #include "bst_internal.h"
 
 /* Default comparison for keys in the tree. */
-int pointerCompare(void *key1, void *key2) {
+static int pointerCompare(void *key1, void *key2) {
 	if (key1 < key2) return -1;
 	else if (key1 == key2) return 0;
 	else return 1;
@@ -20,30 +20,30 @@ struct bsTree *bstCreate(void) {
 		return NULL;
 	bst->root = NULL;
 	bst->compare = pointerCompare;
-	bst->freeValue = NULL;
+	bst->freeData = NULL;
 	bst->freeKey = NULL;
 	return bst;
 }
 
-/* (Private) Free all nodes in bst. If freeValue and freeKey functions
- * are specified (bstSetFreeValue(), bstSetFreeKey()) 
- * they are used to free the node's key and value pointers. */
-void freeTreeNodes(struct bsTree *bst, struct bsTreeNode *node) {
+/* Free all nodes in bst. If freeData and freeKey functions
+ * are specified (bstSetFreeData(), bstSetFreeKey()) 
+ * they are used to free the node's key and data pointers. */
+static void freeTreeNodes(struct bsTree *bst, struct bsTreeNode *node) {
 	if (node == NULL)
 		return;
 	
 	freeTreeNodes(bst, node->left);
 	freeTreeNodes(bst, node->right);
-	if (bst->freeValue)
-		bst->freeValue(node->value);
+	if (bst->freeData)
+		bst->freeData(node->data);
 	if (bst->freeKey)
 		bst->freeKey(node->key);
 	free(node);
 }
 
-/* Free bst and its internal structures. If freeValue and freeKey functions
- * are specified (bstSetFreeValue(), bstSetFreeKey())  
- * they are used to free the key and value pointers.*/
+/* Free bst and its internal structures. If freeData and freeKey functions
+ * are specified (bstSetFreeData(), bstSetFreeKey())  
+ * they are used to free the key and data pointers.*/
 void bstDestroy(struct bsTree *bst) {
 	freeTreeNodes(bst, bst->root);
 	free(bst);
@@ -52,7 +52,7 @@ void bstDestroy(struct bsTree *bst) {
 /* Search for key in bst. If the compare function is specified (bstSetCompare())
  * it is used to compare keys.
  * 
- * Return the value associated with key on success and NULL on error. */
+ * Return the data associated with key on success and NULL on error. */
 void *bstSearch(struct bsTree *bst, void *key) {
 	struct bsTreeNode *node = bst->root;
 	int comparison;
@@ -60,7 +60,7 @@ void *bstSearch(struct bsTree *bst, void *key) {
 	while (node) {
 		comparison = bst->compare(key, node->key);
 		if (comparison == 0)
-			return node->value;
+			return node->data;
 		else if (comparison < 0)
 			node = node->left;
 		else
@@ -70,12 +70,12 @@ void *bstSearch(struct bsTree *bst, void *key) {
 	return NULL;
 }
 
-/* (Private) Search for a node with the key specified in bst.
+/* Search for a node with the key specified in bst.
  * If the compare function is specified (bstSetCompare())
  * it is used to compare keys.
  *
  * Return the node associated with key on success and NULL on error.*/
-void *bstSearchNode(struct bsTree *bst, void *key) {
+static void *bstSearchNode(struct bsTree *bst, void *key) {
 	struct bsTreeNode *node = bst->root;
 	int comparison;
 
@@ -92,11 +92,11 @@ void *bstSearchNode(struct bsTree *bst, void *key) {
 	return NULL;
 }
 
-/* Insert key and value into bst. If the compare function is 
+/* Insert key and data into bst. If the compare function is 
  * specified (bstSetCompare()) it is used to compare keys.
  * 
  * Return bst on success and NULL on error. */
-void *bstInsert(struct bsTree *bst, void *key, void *value) {
+void *bstInsert(struct bsTree *bst, void *key, void *data) {
 	// create new node
 	struct bsTreeNode *newNode;
 	if((newNode = malloc(sizeof(*newNode))) == NULL)
@@ -104,7 +104,7 @@ void *bstInsert(struct bsTree *bst, void *key, void *value) {
 	newNode->left = NULL;
 	newNode->right = NULL;
 	newNode->key = key;
-	newNode->value = value;
+	newNode->data = data;
 
 	struct bsTreeNode *node = bst->root;
 	struct bsTreeNode *parent = NULL;
@@ -127,10 +127,10 @@ void *bstInsert(struct bsTree *bst, void *key, void *value) {
 	return bst;
 }
 
-/* (Private) Find the minimum key in the subtree.
+/* Find the minimum key in the subtree.
  * 
  * Return the minimum node in the subtree.*/
-struct bsTreeNode *bstMin(struct bsTreeNode *subtree) {
+static struct bsTreeNode *bstMin(struct bsTreeNode *subtree) {
 	struct bsTreeNode *node = subtree;
 
 	while(node && node->left)
@@ -139,10 +139,10 @@ struct bsTreeNode *bstMin(struct bsTreeNode *subtree) {
 	return node;
 }
 
-/* (Private) Find the maximum key in the subtree.
+/* Find the maximum key in the subtree.
  * 
  * Return the maximum node in the subtree.*/
-struct bsTreeNode *bstMax(struct bsTreeNode *subtree) {
+static struct bsTreeNode *bstMax(struct bsTreeNode *subtree) {
 	struct bsTreeNode *node = subtree;
 
 	while(node && node->right)
@@ -152,8 +152,8 @@ struct bsTreeNode *bstMax(struct bsTreeNode *subtree) {
 	return node;
 }
 
-/* (Private) Replace node u with node v in bst. */
-void bstTransplant(struct bsTree *bst, struct bsTreeNode *u, struct bsTreeNode *v) {
+/* Replace node u with node v in bst. */
+static void bstTransplant(struct bsTree *bst, struct bsTreeNode *u, struct bsTreeNode *v) {
 	if (u->parent == NULL)
 		bst->root = v; 
 	else 
@@ -166,10 +166,10 @@ void bstTransplant(struct bsTree *bst, struct bsTreeNode *u, struct bsTreeNode *
 		v->parent = u->parent;
 }
 
-/* Delete the given key and its associated value from bst. 
- * If freeValue and freeKey functions are specified 
- * (bstSetFreeValue(), bstSetFreeKey()) they are used to free 
- * the the key and value pointers in bst.
+/* Delete the given key and its associated data from bst. 
+ * If freeData and freeKey functions are specified 
+ * (bstSetFreeData(), bstSetFreeKey()) they are used to free 
+ * the the key and data pointers in bst.
  *
  * Return bst on success and NULL on error.*/
 void *bstDelete(struct bsTree *bst, void *key) {
@@ -195,8 +195,8 @@ void *bstDelete(struct bsTree *bst, void *key) {
 		successor->left->parent = successor;	
 	}
 
-	if (bst->freeValue)
-		bst->freeValue(node->value);
+	if (bst->freeData)
+		bst->freeData(node->data);
 	if (bst->freeKey)
 		bst->freeKey(node->key);
 	free(node);
@@ -204,9 +204,9 @@ void *bstDelete(struct bsTree *bst, void *key) {
 	return bst;
 }
 
-/* (Private) Recursively print the keys in the subtree specified 
+/* Recursively print the keys in the subtree specified 
  * by the given node. */
-void bstPrintRec(struct bsTreeNode *node) {
+static void bstPrintRec(struct bsTreeNode *node) {
 	if (node == NULL) {
 		printf("-");
 		return;
@@ -236,10 +236,10 @@ void bstSetCompare(struct bsTree *bst, int (*compare) (void *key1, void *key2)) 
 		bst->compare = compare; 
 }
 
-/* Set the free function to be used when freeing value pointers in bst. */
-void bstSetFreeValue(struct bsTree *bst, void (*freeValue) (void *value)) {
-	if (freeValue)
-		bst->freeValue = freeValue;
+/* Set the free function to be used when freeing data pointers in bst. */
+void bstSetFreeData(struct bsTree *bst, void (*freeData) (void *data)) {
+	if (freeData)
+		bst->freeData = freeData;
 }
 
 /* Set the free function to be used when freeing key pointers in bst. */
