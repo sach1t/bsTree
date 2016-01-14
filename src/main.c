@@ -1,5 +1,9 @@
 #include "bst.h"
 #include <stdlib.h>
+#include <assert.h>
+#include <stdio.h>
+
+
 
 int compare(void *x, void *y) {
 	int x1 = *((int *)x);
@@ -15,21 +19,25 @@ int compare(void *x, void *y) {
 int main() {
 	bsTree bst = bstCreate();
 	bstSetCompare(bst, compare);
-	int key = 5;
-	bstInsert(bst, &key, NULL);
-	int key2 = 0;
-	bstInsert(bst, &key2, NULL);
-	int key3 = 10;
-	bstInsert(bst, &key3, NULL);
-	int key4 = 2;
-	bstInsert(bst, &key4, NULL);
+
+	int *keys[10];
+	char *data[10];
+	char data_count = 'a';
+	for (int i = 0; i < 10; i++) {
+		keys[i] = malloc(sizeof(**keys));
+		data[i] = malloc(sizeof(**data));
+		assert(keys[i] != NULL);
+		assert(data[i] != NULL);
+		*(keys[i]) = rand() % 100;
+		*(data[i]) = data_count++;
+		printf("key = %d data = %c\n", *keys[i], *data[i]);
+		bstInsert(bst, keys[i], data[i]);
+	} 
+
 	bstPrintKeys(bst);
-	
-	bstDelete(bst, &key3);
-	bstPrintKeys(bst);
-	bstDelete(bst, &key);
-	bstPrintKeys(bst);
+	bstSetFreeData(bst, free);
+	bstSetFreeKey(bst, free);
 	bstDestroy(bst);
 
- return 0;
+	return 0;
 }
